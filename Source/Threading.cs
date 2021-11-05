@@ -24,7 +24,7 @@ namespace EminentDomain.Source
             }
             catch (Exception e)
             {
-                Debug.Log("EminentDomain: Threading:OnCreated -> Exception: " + e.Message + " " + e.StackTrace);
+                Debug.Log("Eminent Domain: Threading:OnCreated -> Exception: " + e.Message + " " + e.StackTrace);
             }
 
         }
@@ -33,56 +33,75 @@ namespace EminentDomain.Source
         public override void OnUpdate(float realTimeDelta, float simulationTimeDelta)
         {
 
-            for (ushort i = 0; i < _buildingManager.m_buildings.m_buffer.Length; i++)
+            try
             {
-                _building = _buildingManager.m_buildings.m_buffer[i];
-
-                if (IsRICOBuilding(_building))
+                for (ushort i = 0; i < _buildingManager.m_buildings.m_buffer.Length; i++)
                 {
-                    if ((_building.m_flags & Building.Flags.Abandoned) != Building.Flags.None)
-                    {
-                        _buildingIds.Add(i);
-                    }
-                    else if ((_building.m_flags & Building.Flags.BurnedDown) != Building.Flags.None || (_building.m_flags & Building.Flags.Collapsed) != Building.Flags.None)
-                    {
+                    _building = _buildingManager.m_buildings.m_buffer[i];
 
-                        if ((_building.m_problems & Notification.Problem.Fire) != Notification.Problem.None)
+                    if (IsRICOBuilding(_building))
+                    {
+                        if ((_building.m_flags & Building.Flags.Abandoned) != Building.Flags.None)
                         {
                             _buildingIds.Add(i);
                         }
-                        else if (((_building.m_problems & Notification.Problem.StructureDamaged) != Notification.Problem.None || (_building.m_problems & Notification.Problem.StructureVisited) != Notification.Problem.None))
+                        else if ((_building.m_flags & Building.Flags.BurnedDown) != Building.Flags.None || (_building.m_flags & Building.Flags.Collapsed) != Building.Flags.None)
                         {
-                            _buildingIds.Add(i);
+
+                            if ((_building.m_problems & Notification.Problem.Fire) != Notification.Problem.None)
+                            {
+                                _buildingIds.Add(i);
+                            }
+                            else if (((_building.m_problems & Notification.Problem.StructureDamaged) != Notification.Problem.None || (_building.m_problems & Notification.Problem.StructureVisited) != Notification.Problem.None))
+                            {
+                                _buildingIds.Add(i);
+                            }
                         }
                     }
                 }
+
             }
+            catch (Exception e)
+            {
+                Debug.Log("EminentDomain: Threading:OnUpdate -> Exception: " + e.Message + " " + e.StackTrace);
+            }
+
+
 
         }
 
         private bool IsRICOBuilding(Building building)
         {
-            bool isRICO = false;
 
-            switch (building.Info.m_class.m_service)
+            try
             {
-                case ItemClass.Service.Residential:
-                case ItemClass.Service.Commercial:
-                case ItemClass.Service.Industrial:
-                case ItemClass.Service.Office:
-                    isRICO = true;
-                    break;
-                default:
-                    isRICO = false;
-                    break;
+                bool isRICO = false;
+
+                switch (building.Info.m_class.m_service)
+                {
+                    case ItemClass.Service.Residential:
+                    case ItemClass.Service.Commercial:
+                    case ItemClass.Service.Industrial:
+                    case ItemClass.Service.Office:
+                        isRICO = true;
+                        break;
+                    default:
+                        isRICO = false;
+                        break;
+                }
+
+                return isRICO;
+
+
             }
+            catch (Exception e)
+            {
+                Debug.Log("Eminent Domain: Threading:IsRICOBuilding -> Exception: " + e.Message + " " + e.StackTrace);
+            }
+            return false;
 
-            return isRICO;
         }
 
-        private bool IsDisasterServiceRequired(Building building)
-        {
-            return building.m_levelUpProgress != 255 ? true : false;
-        }
+       
     }
 }

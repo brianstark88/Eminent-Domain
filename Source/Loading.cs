@@ -26,7 +26,7 @@ namespace EminentDomain.Source
             }
             catch (Exception e)
             {
-                Debug.Log("[Bulldoze It!] Loading:OnLevelLoaded -> Exception: " + e.Message);
+                Debug.Log("Eminent Domain: Loading:OnLevelLoaded -> Exception: " + e.Message);
             }
         }
 
