@@ -10,9 +10,6 @@ namespace EminentDomain.Source
 {
     public class ChargeEminentDomain : BuildingExtensionBase
     {
-
-        
-
         public override void OnBuildingReleased(ushort buildingId)
         {
             try
@@ -28,11 +25,11 @@ namespace EminentDomain.Source
                 if (!(buildingInfo.m_class.m_service == ItemClass.Service.Office || buildingInfo.m_class.m_service == ItemClass.Service.Residential || buildingInfo.m_class.m_service == ItemClass.Service.Commercial || buildingInfo.m_class.m_service == ItemClass.Service.Industrial))
                     return;
 
-                if (IsCollapsedAbandoned(buildingId))
-                {
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Building Collapsed or Abandoned: Eminent Domain Not Charged.");
-                    return;
-                }
+                //if (IsCollapsedAbandoned(buildingId))
+                //{
+                //    Debug.Log("Building Collapsed or Abandoned: Eminent Domain Not Charged.");
+                //    return;
+                //}
 
 
                 if (!IsZoned(building, buildingInfo))
@@ -81,16 +78,16 @@ namespace EminentDomain.Source
                     var dLandValue = district.GetLandValue();
                     var hasHighRiseBan = district.IsPolicySet(DistrictPolicies.Policies.HighriseBan);
 
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Eminent Domain -------------------- ");
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Building Name : " + building.Info.name);
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Eminent Domain Reason: " + message);
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Service : " + building.Info.m_class.m_service.ToString());
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "SubService : " + building.Info.m_class.m_subService.ToString());
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Land Value : " + dLandValue.ToString());
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Cells: " + (building.m_length * building.m_width).ToString());
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Has Highrise Ban: " + hasHighRiseBan.ToString());
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Eminent Domain: " + (-1 * amount).ToString());
-                    DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "");
+                    Debug.Log("Eminent Domain -------------------- ");
+                    Debug.Log("Building Name : " + building.Info.name);
+                    Debug.Log("Eminent Domain Reason: " + message);
+                    Debug.Log("Service : " + building.Info.m_class.m_service.ToString());
+                    Debug.Log("SubService : " + building.Info.m_class.m_subService.ToString());
+                    Debug.Log("Land Value : " + dLandValue.ToString());
+                    Debug.Log("Cells: " + (building.m_length * building.m_width).ToString());
+                    Debug.Log("Has Highrise Ban: " + hasHighRiseBan.ToString());
+                    Debug.Log("Eminent Domain: " + (-1 * amount).ToString());
+                    Debug.Log("");
 
 
 
@@ -105,31 +102,37 @@ namespace EminentDomain.Source
         }
 
 
-        private bool IsCollapsedAbandoned(ushort buildingId)
+        public bool IsCollapsedAbandoned(ushort buildingId)
         {
+
+
             try
             {
-                CollapsedAbandonedBuildings collapsedAbandonedBuildings = GameObject.Find("CollapsedAbandonedBuildings").GetComponent<CollapsedAbandonedBuildings>();
-                bool isCollapsedAbandoned = false;
+                CollapsedAbandonedBuildings _buildingIdsGameObject = GameObject.Find("EDCollapsedAndAbandoned").GetComponent<CollapsedAbandonedBuildings>();
 
-                if (collapsedAbandonedBuildings.buildingList.Contains(buildingId))
+                var buildingList = _buildingIdsGameObject.buildingList;
+
+                DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, buildingList.Count().ToString());
+
+                if (buildingList.Contains(buildingId))
                 {
-                    isCollapsedAbandoned = true;
-                    collapsedAbandonedBuildings.buildingList.Remove(buildingId);
+                    buildingList.Remove(buildingId);
+                    return true;
                 }
+                return false;
 
-                return isCollapsedAbandoned;
             }
-            catch(Exception e)
+
+
+            catch (Exception e)
             {
                 Debug.Log("EminentDomain: ChargeEminentDomain:IsCollapsedAbandoned -> Exception: " + e.Message + " " + e.StackTrace);
-            }
+                return false;
+            }           
 
-            return false;
-            
         }
 
-        private bool IsZoned(Building building, BuildingInfo buildingInfo)
+        public bool IsZoned(Building building, BuildingInfo buildingInfo)
         {
             try
             {
@@ -143,7 +146,7 @@ namespace EminentDomain.Source
             return true;
         }
 
-        private bool IsCorrectDistrict(BuildingInfo buildingInfo, District district)
+        public bool IsCorrectDistrict(BuildingInfo buildingInfo, District district)
         {
 
             try
@@ -199,7 +202,7 @@ namespace EminentDomain.Source
 
         
 
-        private bool BulldozeToolActive()
+        public bool BulldozeToolActive()
         {
             try
             {
