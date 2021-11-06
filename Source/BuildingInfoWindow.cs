@@ -123,7 +123,7 @@
                     landAreaLabel.relativePosition = new Vector3(x, y);
                     y += eminentDomainLabel.height + 10;
 
-                    eminentDomainLabel.text = @"Eminent Domain: " + String.Format("{0:n0}", -1 * ChargeEminentDomain.CalculateEminentDomain(buildingId));
+                    eminentDomainLabel.text = @"Eminent Domain: " + String.Format("{0:n0}", -1 * ChargeEminentDomain.CalculateEminentDomain(buildingId) / 100);
                     eminentDomainLabel.Show();
                     eminentDomainLabel.relativePosition = new Vector3(x, y);
                     

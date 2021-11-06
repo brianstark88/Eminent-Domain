@@ -91,7 +91,7 @@ namespace EminentDomain.Source
 
 
 
-                    Singleton<EconomyManager>.instance.AddResource(EconomyManager.Resource.RefundAmount, amount * 100, m_class);
+                    Singleton<EconomyManager>.instance.AddResource(EconomyManager.Resource.RefundAmount, amount, m_class.m_service, m_class.m_subService, ItemClass.Level.None, district.m_taxationPolicies);
                 }
                     
             }
