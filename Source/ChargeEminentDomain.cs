@@ -52,6 +52,13 @@ namespace EminentDomain.Source
                     Charge(eminentDomain, buildingInfo.m_class, "Bulldozed", district, building);
                     return;
                 }
+
+                if (BuildingToolActive())
+                {
+                    eminentDomain = CalculateEminentDomain(buildingId);
+                    Charge(eminentDomain, buildingInfo.m_class, "Bulldozed", district, building);
+                    return;
+                }
             }
             catch (Exception e)
             {
@@ -215,6 +222,21 @@ namespace EminentDomain.Source
             }
             return false;
             
+        }
+
+        public bool BuildingToolActive()
+        {
+            try
+            {
+                BuildingTool buildingTool = Singleton<BuildingTool>.instance;
+                return buildingTool.enabled;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("EminentDomain: ChargeEminentDomain:BulldozeToolActive -> Exception: " + e.Message + " " + e.StackTrace);
+            }
+            return false;
+
         }
 
 
