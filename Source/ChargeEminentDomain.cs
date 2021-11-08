@@ -25,35 +25,34 @@ namespace EminentDomain.Source
                 if (!(buildingInfo.m_class.m_service == ItemClass.Service.Office || buildingInfo.m_class.m_service == ItemClass.Service.Residential || buildingInfo.m_class.m_service == ItemClass.Service.Commercial || buildingInfo.m_class.m_service == ItemClass.Service.Industrial))
                     return;
 
-                //if (IsCollapsedAbandoned(buildingId))
-                //{
-                //    Debug.Log("Building Collapsed or Abandoned: Eminent Domain Not Charged.");
-                //    return;
-                //}
-
-
-                if (!IsZoned(building, buildingInfo))
+                if (IsCollapsedAbandoned(buildingId))
+                {
+                    eminentDomain = (int)(CalculateEminentDomain(buildingId, true));
+                    CollapsedAbandonedBuildings _buildingIdsGameObject = GameObject.Find("collapsedBuildingsObject").GetComponent<CollapsedAbandonedBuildings>();
+                    var buildingList = _buildingIdsGameObject.buildingList;
+                    buildingList.Remove(buildingId);
+                    Charge(0, buildingInfo.m_class, "Collapsed or Abandoned", district, building);
+                    return;
+                }
+                else if (!IsZoned(building, buildingInfo))
                 {
                     eminentDomain = CalculateEminentDomain(buildingId);
                     Charge(eminentDomain, buildingInfo.m_class, "Zone check failed", district, building);
                     return;
                 }
-
-                if (!(IsCorrectDistrict(buildingInfo, district)))
+                else if (!(IsCorrectDistrict(buildingInfo, district)))
                 {
                     eminentDomain = CalculateEminentDomain(buildingId);
                     Charge(eminentDomain, buildingInfo.m_class, "Invalid District", district, building);
                     return;
                 }
-
-                if (BulldozeToolActive())
+                else if (BulldozeToolActive())
                 {
                     eminentDomain = CalculateEminentDomain(buildingId);
                     Charge(eminentDomain, buildingInfo.m_class, "Bulldozed", district, building);
                     return;
                 }
-
-                if (BuildingToolActive())
+                else if (BuildingToolActive())
                 {
                     eminentDomain = CalculateEminentDomain(buildingId);
                     Charge(eminentDomain, buildingInfo.m_class, "Bulldozed", district, building);
@@ -80,8 +79,6 @@ namespace EminentDomain.Source
             {
                 if (amount != 0)
                 {
-
-
                     var dLandValue = district.GetLandValue();
                     var hasHighRiseBan = district.IsPolicySet(DistrictPolicies.Policies.HighriseBan);
 
@@ -109,24 +106,22 @@ namespace EminentDomain.Source
         }
 
 
-        public bool IsCollapsedAbandoned(ushort buildingId)
+        public static bool IsCollapsedAbandoned(ushort buildingId)
         {
 
 
             try
             {
-                CollapsedAbandonedBuildings _buildingIdsGameObject = GameObject.Find("EDCollapsedAndAbandoned").GetComponent<CollapsedAbandonedBuildings>();
+                CollapsedAbandonedBuildings _buildingIdsGameObject = GameObject.Find("collapsedBuildingsObject").GetComponent<CollapsedAbandonedBuildings>();
 
                 var buildingList = _buildingIdsGameObject.buildingList;
 
-                DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, buildingList.Count().ToString());
+                DebugOutputPanel.AddMessage(PluginManager.MessageType.Message, "Building Count: " + buildingList.Count().ToString());
 
                 if (buildingList.Contains(buildingId))
-                {
-                    buildingList.Remove(buildingId);
                     return true;
-                }
-                return false;
+                else
+                    return false;
 
             }
 
@@ -242,7 +237,7 @@ namespace EminentDomain.Source
 
 
 
-        public static int CalculateEminentDomain(ushort buildingId)
+        public static int CalculateEminentDomain(ushort buildingId, bool isAbandonedorCollapsed = false)
         {
             try
             {
@@ -300,6 +295,8 @@ namespace EminentDomain.Source
                     }
                 }
 
+                if (isAbandonedorCollapsed)
+                    eminentDomain = (int)(eminentDomain * .5);
 
                 return eminentDomain * 100;
             }

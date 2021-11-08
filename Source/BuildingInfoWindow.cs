@@ -116,14 +116,23 @@
             {
                 if (showDescription)
                 {
-                    
+                    int eminentDomain = 0;
+                    if (ChargeEminentDomain.IsCollapsedAbandoned(buildingId))
+                    {
+                        eminentDomain = ChargeEminentDomain.CalculateEminentDomain(buildingId, true) / 100;
+                    }
+                    else
+                    {
+                        eminentDomain = ChargeEminentDomain.CalculateEminentDomain(buildingId) / 100;
+                    }
+
 
                     landAreaLabel.text = "Land Area: " + String.Format("{0:n0}", building.Info.m_cellLength * building.Info.m_cellWidth * 64) + "m2";
                     landAreaLabel.Show();
                     landAreaLabel.relativePosition = new Vector3(x, y);
                     y += eminentDomainLabel.height + 10;
 
-                    eminentDomainLabel.text = @"Eminent Domain: " + String.Format("{0:n0}", -1 * ChargeEminentDomain.CalculateEminentDomain(buildingId) / 100);
+                    eminentDomainLabel.text = @"Eminent Domain: " + String.Format("{0:n0}", -1 * eminentDomain);
                     eminentDomainLabel.Show();
                     eminentDomainLabel.relativePosition = new Vector3(x, y);
                     

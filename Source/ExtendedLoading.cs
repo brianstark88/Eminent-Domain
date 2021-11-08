@@ -1,9 +1,11 @@
 ﻿using ColossalFramework.UI;
+using EminentDomain.Source;
 using ICities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ExtendedBuildings
 {
@@ -12,11 +14,14 @@ namespace ExtendedBuildings
         static GameObject buildingWindowGameObject;
         BuildingInfoWindow5 buildingWindow;
         private LoadMode _mode;
+        private GameObject _gameObject;
 
         //public class ExtendedLoadingException : Exception
         //{
         //    public ExtendedLoadingException(string message) : base(message) { }
         //}
+
+
 
         private static IEnumerable<UIPanel> GetUIPanelInstances()
         {
@@ -30,6 +35,26 @@ namespace ExtendedBuildings
             return GetUIPanelInstances().FirstOrDefault(p => p.name == name);
         }
 
+        public override void OnCreated(ILoading loading)
+        {
+            BuildingManager objectOfType = UnityEngine.Object.FindObjectOfType<BuildingManager>();
+            Debug.Log("objectOfType is null: " + (objectOfType == null).ToString());
+
+            if (objectOfType != null)
+            {
+                _gameObject = new GameObject("collapsedBuildingsObject");
+                _gameObject.transform.parent = objectOfType.transform;
+                _gameObject.AddComponent<CollapsedAbandonedBuildings>();
+                _gameObject.SetActive(true);
+               
+
+            }
+            var gameObject = GameObject.Find("collapsedBuildingsObject").GetComponent<CollapsedAbandonedBuildings>();
+            Debug.Log("_gameObject list length: " + gameObject.buildingList.Count().ToString());
+
+            base.OnCreated(loading);
+        }
+
         public override void OnLevelLoaded(LoadMode mode)
         {
             if (mode != LoadMode.LoadGame && mode != LoadMode.NewGame)
@@ -40,12 +65,7 @@ namespace ExtendedBuildings
             buildingWindowGameObject = new GameObject("buildingWindowObject");
 
             var buildingInfo = UIView.Find<UIPanel>("(Library) ZonedBuildingWorldInfoPanel");
-            //if (buildingInfo == null)
-            //{
-            //    throw new ExtendedLoadingException("UIPanel not found (update broke the mod!): (Library) ZonedBuildingWorldInfoPanel\nAvailable panels are:\n" +
-            //        string.Join("  \n", GetUIPanelNames()));
-            //    //FindObjectsOfType<UIPanel>().Select(p => p.name).ToArray()));
-            //}
+            
             this.buildingWindow = buildingWindowGameObject.AddComponent<BuildingInfoWindow5>();
             this.buildingWindow.transform.parent = buildingInfo.transform;
             this.buildingWindow.size = new Vector3(buildingInfo.size.x, buildingInfo.size.y);
@@ -54,21 +74,12 @@ namespace ExtendedBuildings
             buildingInfo.eventVisibilityChanged += buildingInfo_eventVisibilityChanged;
 
             var serviceBuildingInfo = GetPanel("(Library) CityServiceWorldInfoPanel");//UIView.Find<UIPanel>("(Library) CityServiceWorldInfoPanel");
-            //if (serviceBuildingInfo == null)
-            //{
-            //    throw new ExtendedLoadingException("UIPanel not found (update broke the mod!): (Library) CityServiceWorldInfoPanel\nAvailable panels are:\n" +
-            //        string.Join("  \n", GetUIPanelNames()));
-            //}
-            //serviceWindow = buildingWindowGameObject.AddComponent<ServiceInfoWindow2>();
-            //serviceWindow.servicePanel = serviceBuildingInfo.gameObject.transform.GetComponentInChildren<CityServiceWorldInfoPanel>();
+            
 
-            //serviceBuildingInfo.eventVisibilityChanged += serviceBuildingInfo_eventVisibilityChanged;
+            
+
+
         }
-
-        //private void serviceBuildingInfo_eventVisibilityChanged(UIComponent component, bool value)
-        //{
-        //    serviceWindow.Update();
-        //}
 
         public override void OnLevelUnloading()
         {

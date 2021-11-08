@@ -11,7 +11,9 @@ namespace EminentDomain.Source
 
         private void Awake()
         {
+           
             buildingList = new List<ushort>();
+            Debug.Log("CollapsedAbandonedBuildings Awake");
         }
 
        
