@@ -27,7 +27,6 @@ namespace EminentDomain.Source
 
                 if (IsCollapsedAbandoned(buildingId))
                 {
-                    eminentDomain = (int)(CalculateEminentDomain(buildingId, true));
                     CollapsedAbandonedBuildings _buildingIdsGameObject = GameObject.Find("collapsedBuildingsObject").GetComponent<CollapsedAbandonedBuildings>();
                     var buildingList = _buildingIdsGameObject.buildingList;
                     buildingList.Remove(buildingId);
@@ -241,6 +240,9 @@ namespace EminentDomain.Source
         {
             try
             {
+                if (isAbandonedorCollapsed)
+                    return 0;
+
                 BuildingManager buildingManager = Singleton<BuildingManager>.instance;
                 Building building = buildingManager.m_buildings.m_buffer[buildingId];
                 BuildingInfo buildingInfo = building.Info;

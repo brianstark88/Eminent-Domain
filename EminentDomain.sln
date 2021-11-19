@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EminentDomain", "EminentDomain.csproj", "{0212033D-724C-4A6F-9F59-072D3A1295F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EminentDomainProj", "..\EminentDomainProj\EminentDomainProj.csproj", "{41746008-D53F-40E5-8278-3E0FFFF422DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0212033D-724C-4A6F-9F59-072D3A1295F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0212033D-724C-4A6F-9F59-072D3A1295F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0212033D-724C-4A6F-9F59-072D3A1295F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41746008-D53F-40E5-8278-3E0FFFF422DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41746008-D53F-40E5-8278-3E0FFFF422DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41746008-D53F-40E5-8278-3E0FFFF422DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41746008-D53F-40E5-8278-3E0FFFF422DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
